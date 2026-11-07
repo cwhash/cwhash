@@ -33,8 +33,8 @@ spec:
     web: [HTML, CSS, JavaScript]
 status:
   phase: Running
-  observedGeneration: 0
-  lastUpdated: null
+  observedGeneration: 1
+  lastUpdated: 2026-11-07
   publicRepos: 1
 ```
 
