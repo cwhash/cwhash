@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cwhash/cwhash/main/schema.json",
+  "title": "cwhash profile (human/v1 Engineer)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "human/v1" },
+    "kind": { "const": "Engineer" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "$ref": "#/$defs/dnsLabel" },
+        "namespace": { "$ref": "#/$defs/dnsLabel" },
+        "labels": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/dnsLabel" },
+          "additionalProperties": { "$ref": "#/$defs/dnsLabel" }
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "displayName", "contact", "openTo", "education",
+        "experience", "capstone", "awards", "stack"
+      ],
+      "properties": {
+        "displayName": { "$ref": "#/$defs/text" },
+        "contact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["email", "linkedin"],
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+            },
+            "linkedin": {
+              "type": "string",
+              "pattern": "^https://www\\.linkedin\\.com/in/[A-Za-z0-9_-]+/?$"
+            }
+          }
+        },
+        "openTo": { "$ref": "#/$defs/textList" },
+        "education": { "$ref": "#/$defs/periodList" },
+        "experience": { "$ref": "#/$defs/periodList" },
+        "capstone": { "$ref": "#/$defs/text" },
+        "awards": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "description": "Award text ending in a year, e.g. 'Best Paper @ X (2023)'",
+            "pattern": "^\\S.* \\(\\d{4}\\)$"
+          }
+        },
+        "stack": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[a-z][a-z0-9]*(_[a-z0-9]+)*$" },
+          "additionalProperties": { "$ref": "#/$defs/textList" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "pattern": "^\\S(.*\\S)?$" },
+    "textList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/text" }
+    },
+    "dnsLabel": {
+      "type": "string",
+      "maxLength": 63,
+      "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+    },
+    "periodList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "description": "'<title> @ <organization> (YYYY–YYYY)' or '(YYYY–now)', using an en dash",
+        "pattern": "^\\S.* @ \\S.* \\(\\d{4}–(\\d{4}|now)\\)$"
+      }
+    }
+  }
+}

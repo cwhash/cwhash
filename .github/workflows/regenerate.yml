@@ -1,0 +1,50 @@
+name: regenerate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - cwhash.yaml
+      - schema.json
+      - templates/**
+      - scripts/**
+  schedule:
+    - cron: "17 3 * * *"  # daily, 11:17 Taiwan time
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: regenerate
+  cancel-in-progress: false
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # push the regenerated files
+    steps:
+      # Credentials are kept on purpose: the last step pushes.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0  # status.py counts commits to cwhash.yaml
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: pip install -r requirements.txt
+      - name: Compute status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/status.py
+      - run: python scripts/build.py
+      - name: Commit if anything changed
+        run: |
+          git add README.md cwhash.json resume.pdf status.json
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: regenerate profile [skip ci]"
+          git push
