@@ -1,5 +1,0 @@
-Jinja2==3.1.6
-jsonschema==4.26.0
-PyYAML==6.0.3
-typst==0.15.2
-yamllint==1.38.0

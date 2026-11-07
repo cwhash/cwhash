@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./schema.json
+# yaml-language-server: $schema=./.github/workflows/schema.json
 apiVersion: human/v1
 kind: Engineer
 metadata:

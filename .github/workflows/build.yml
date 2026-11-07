@@ -1,0 +1,63 @@
+name: build
+
+# Edit cwhash.yaml; this workflow regenerates README.md.
+#   pull_request  -> validate only (read-only token)
+#   push to main  -> validate, regenerate README.md, commit it as github-actions[bot]
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - cwhash.yaml
+      - README.md  # undo hand edits
+      - .github/workflows/**
+  workflow_dispatch:
+
+permissions: {}
+
+env:
+  DEPS: jsonschema==4.26.0 PyYAML==6.0.3 yamllint==1.38.0
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: pip install $DEPS
+      - run: python .github/workflows/build.py --check
+
+  generate:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # push the regenerated README
+    concurrency:
+      group: generate
+      cancel-in-progress: false
+    steps:
+      # Credentials are kept on purpose: the last step pushes.
+      # (Pushes made with this token don't trigger workflows, so there is no loop.)
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: pip install $DEPS
+      - run: python .github/workflows/build.py
+      - name: Commit README if it changed
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "README.md is up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: regenerate profile [skip ci]" -- README.md
+          git push

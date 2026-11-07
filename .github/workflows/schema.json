@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/cwhash/cwhash/main/schema.json",
+  "$id": "https://raw.githubusercontent.com/cwhash/cwhash/main/.github/workflows/schema.json",
   "title": "cwhash profile (human/v1 Engineer)",
   "type": "object",
   "additionalProperties": false,

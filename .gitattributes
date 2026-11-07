@@ -1,3 +1,0 @@
-# Generated files are compared byte-for-byte in CI, so keep LF everywhere.
-* text=auto eol=lf
-*.pdf binary
