@@ -1,6 +1,7 @@
 ```yaml
 # cwhash.yaml
 name: Ashton Hou
+email: ashton.cwhou@gmail.com
 now: M.S. student @ NTUST
 open_to: [data / AI engineering internships]
 capstone: Lung X-ray segmentation, Swin-Unet, Dice 95.8% (B.S.)
@@ -23,5 +24,3 @@ stack:
   embedded: [C/C++, Linux, ROS, Arduino]
   web: [HTML, CSS, JavaScript]
 ```
-
-[ashton.cwhou@gmail.com](mailto:ashton.cwhou@gmail.com) · [LinkedIn](https://www.linkedin.com/in/ashton-cwhou/)
