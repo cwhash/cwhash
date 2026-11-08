@@ -26,7 +26,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "displayName", "contact", "openTo", "education",
+        "displayName", "contact", "education",
         "experience", "capstone", "awards", "stack"
       ],
       "properties": {

@@ -121,7 +121,8 @@ def render_readme(doc: dict) -> str:
     spec = copy.deepcopy(doc["spec"])
     view = {"name": spec.pop("displayName"), "email": spec.pop("contact")["email"], **spec}
     for key in FLOW_LISTS:
-        view[key] = _FlowList(view[key])
+        if key in view:  # optional fields
+            view[key] = _FlowList(view[key])
     view["stack"] = {k: _FlowList(v) for k, v in view["stack"].items()}
 
     text = yaml.dump(view, Dumper=_Dumper, sort_keys=False, allow_unicode=True, width=1000)
