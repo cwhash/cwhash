@@ -4,7 +4,6 @@
 # cwhash.yaml
 name: Ashton Hou
 email: ashton.cwhou@gmail.com
-openTo: [data / AI engineering internships]
 education:
   - M.S. Electrical Engineering @ NTUST (2026–now)
   - B.S. Electrical Engineering @ Yuan Ze University (2020–2024)
